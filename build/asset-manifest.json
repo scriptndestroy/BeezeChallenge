@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/BeezeChallenge/static/css/main.5ecd60fb.chunk.css",
+    "main.js": "/BeezeChallenge/static/js/main.500697e5.chunk.js",
+    "main.js.map": "/BeezeChallenge/static/js/main.500697e5.chunk.js.map",
+    "runtime-main.js": "/BeezeChallenge/static/js/runtime-main.46ad3b0f.js",
+    "runtime-main.js.map": "/BeezeChallenge/static/js/runtime-main.46ad3b0f.js.map",
+    "static/css/2.af3c1da9.chunk.css": "/BeezeChallenge/static/css/2.af3c1da9.chunk.css",
+    "static/js/2.cf1a731d.chunk.js": "/BeezeChallenge/static/js/2.cf1a731d.chunk.js",
+    "static/js/2.cf1a731d.chunk.js.map": "/BeezeChallenge/static/js/2.cf1a731d.chunk.js.map",
+    "index.html": "/BeezeChallenge/index.html",
+    "precache-manifest.dcdcaff2102497aeb8ba06c6f3a4f27e.js": "/BeezeChallenge/precache-manifest.dcdcaff2102497aeb8ba06c6f3a4f27e.js",
+    "service-worker.js": "/BeezeChallenge/service-worker.js",
+    "static/css/2.af3c1da9.chunk.css.map": "/BeezeChallenge/static/css/2.af3c1da9.chunk.css.map",
+    "static/css/main.5ecd60fb.chunk.css.map": "/BeezeChallenge/static/css/main.5ecd60fb.chunk.css.map",
+    "static/js/2.cf1a731d.chunk.js.LICENSE.txt": "/BeezeChallenge/static/js/2.cf1a731d.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.46ad3b0f.js",
+    "static/css/2.af3c1da9.chunk.css",
+    "static/js/2.cf1a731d.chunk.js",
+    "static/css/main.5ecd60fb.chunk.css",
+    "static/js/main.500697e5.chunk.js"
+  ]
+}
