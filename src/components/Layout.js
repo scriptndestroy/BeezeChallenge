@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Container } from "react-bootstrap";
-import { NavMenu } from "./NavMenu";
+import { NavMenu } from "./NavMenu/NavMenu";
 // import { NavMenu } from './NavMenu';
 
 export class Layout extends Component {
@@ -10,7 +10,7 @@ export class Layout extends Component {
     return (
       <div>
         <NavMenu />
-        <Container>{this.props.children}</Container>
+        <Container fluid className="p-0">{this.props.children}</Container>
       </div>
     );
   }

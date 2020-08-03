@@ -1,0 +1,9 @@
+@media (min-width: 839px){
+    .head.miniBackground {
+        min-height: 300px;
+    }
+}
+
+.head {
+    background-image: url(https://terrigen-cdn-dev.marvel.com/content/prod/1x/characters_art_mas_dsk_01.jpg);
+}
