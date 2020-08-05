@@ -7,3 +7,21 @@
 .head {
     background-image: url(https://terrigen-cdn-dev.marvel.com/content/prod/1x/characters_art_mas_dsk_01.jpg);
 }
+
+.zoom {
+    transition: transform .2s;
+}
+
+.zoom > .card {
+    transition: box-shadow .2s;
+}
+
+.zoom:hover > .card {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+}
+
+.zoom:hover {
+    transform: scale(1.05);    
+    z-index: 1;
+    cursor: pointer;
+}

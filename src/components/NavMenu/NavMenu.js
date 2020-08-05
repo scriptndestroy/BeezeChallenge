@@ -31,7 +31,7 @@ export class NavMenu extends Component {
 
   render() {
     return (
-      <header>
+      <header className="sticky-top">
         <Navbar sticky="top" expand="lg" variant='dark' className="bg-navbar">
           <Navbar.Brand href="#home">
             <svg width="130" height="52" xmlns="http://www.w3.org/2000/svg">
