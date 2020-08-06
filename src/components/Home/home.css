@@ -25,3 +25,30 @@
     z-index: 1;
     cursor: pointer;
 }
+
+.autocomplete {
+    height: calc(1.62em + 0.74rem + 2px);
+    border: 1px solid #ced4da !important;
+    border-radius: .25rem;
+}
+
+.autocomplete:hover {
+    border-color:  #8895a2 !important;    
+}
+
+.multiselect {
+    border: 1px solid #ced4da !important;
+    border-radius: .25rem;
+}
+
+.multiselect:hover {
+    border-color:  #8895a2 !important;    
+}
+
+.p-multiselect > div.p-multiselect-label-container {
+    height: calc(1.5em + .84rem + 2px);
+}
+
+.form-control:hover {
+    border-color:  #8895a2 !important;    
+}

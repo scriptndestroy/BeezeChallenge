@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Paginator } from "primereact/paginator";
+import { AutoComplete } from "primereact/autocomplete";
+import { MultiSelect } from "primereact/multiselect";
 import "primereact/resources/themes/nova-light/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
@@ -9,13 +11,14 @@ import {
   Button,
   Row,
   Col,
-  CardDeck,
   Card,
+  Form,
 } from "react-bootstrap";
 // import Pagination from "react-bootstrap/Pagination";
 import "./home.css";
-import { GetHeroes } from "./functions";
+import { GetHeroes, GetEvents } from "./functions";
 import { Link } from "react-router-dom";
+import heroesJson from "../../JsonData/HeroNames.json";
 
 export class Home extends Component {
   static displayName = Home.name;
@@ -24,36 +27,46 @@ export class Home extends Component {
     super(props);
 
     this.state = {
-      limit: "limit=36",
-      offset: "offset=36",  
+      limit: "limit=24",
+      offset: "offset=24",
+      orderBy: "name&",
+      nameStartsWith: "",
+      events: [],
       total: 0,
       pagination: [],
       cards: [],
+      heroesSuggestions: null,
     };
 
+    this.heroes = heroesJson;
+
     this.onGetHeroesClick = this.onGetHeroesClick.bind(this);
+    this.onClear = this.onClear.bind(this);
     this.loadData = this.loadData.bind(this);
+    this.suggestHeroes = this.suggestHeroes.bind(this);
   }
 
-  componentDidMount() {
-    //Comprobar filtro sessionstorage
+  componentDidMount() {    
     this.loadData();
   }
 
   componentDidUpdate() {}
 
-  //DATA
+  //--DATA--
   loadData() {
-    GetHeroes(this.state.limit + "&").then((heroes) => {
-      const totalPagination = Math.round(heroes.data.total / 36);      
-      const cards = this.GetCards(heroes.data.results);
+    Promise.all([GetHeroes(this.state.limit + "&"), GetEvents()]).then(
+      (values) => {
+        const totalPagination = Math.round(values[0].data.total / 24);
+        const cards = this.GetCards(values[0].data.results);
 
-      this.setState({
-        total: heroes.data.total,
-        totalPagination: totalPagination,      
-        cards: cards,
-      });
-    });
+        this.setState({
+          events: values[1].data.results,
+          total: values[0].data.total,
+          totalPagination: totalPagination,
+          cards: cards,
+        });
+      }
+    );
   }
 
   GetCards(data) {
@@ -95,16 +108,125 @@ export class Home extends Component {
     return cards;
   }
 
-  //EVENTS
-  onChangePagination(e) {      
-    const offset = "offset=" + (36 * e.page).toString();
-    GetHeroes(this.state.limit + "&" + offset).then((heroes)=> {
+  //--EVENTS--
+
+  onChangePagination(e) {
+    const offset = "offset=" + (24 * e.page).toString();
+    const orderBy = "orderBy=" + this.state.orderBy;
+    const query = this.state.limit + "&" + offset + "&" + orderBy + (this.state.selectedEvents.length > 0 ? "events=" + this.state.selectedEvents.toString() + "&" : ""); 
+    GetHeroes(query).then(
+      (heroes) => {
         const cards = this.GetCards(heroes.data.results);
         this.setState({
-            cards: cards,
-            first: e.first
+          cards: cards,
+          first: e.first,
+          offset: offset,
         });
+      }
+    );
+  }
+
+  //->ORDER
+  onChangeOrderSelect(e) {
+    let orderBy = "";
+    switch (e.target.value) {
+      case "2":
+        orderBy = "-name&";
+        break;
+      case "3":
+        orderBy = "modified&";
+        break;
+      case "4":
+        orderBy = "-modified&";
+        break;
+
+      default:
+        orderBy = "name&";
+        break;
+    }
+    
+    const queryString =
+      this.state.limit +
+      "&" +
+      this.state.offset +
+      "&orderBy=" +
+      orderBy +
+      (this.state.nameStartsWith !== ""
+        ? "nameStartsWith=" + this.state.nameStartsWith + "&"
+        : "") + (this.state.selectedEvents.length > 0 ? "events=" + this.state.selectedEvents.toString() : "");
+
+    GetHeroes(queryString).then((heroes) => {
+      const cards = this.GetCards(heroes.data.results);
+      this.setState({
+        cards: cards,
+        orderBy: orderBy        
+      });
     });
+  }
+
+  //->FILTER EVENTS
+  onChangeFilterEvents(e) {
+    const queryString =
+      this.state.limit +
+      "&offset=0&orderBy=" +      
+      this.state.orderBy +
+      (this.state.nameStartsWith !== ""
+        ? this.state.nameStartsWith + "&"
+        : "") +
+      (e.value.length > 0 ? "events=" + e.value.toString() + "&" : "&");
+
+    GetHeroes(queryString).then((heroes) => {
+      const cards = this.GetCards(heroes.data.results);
+      this.setState({
+        cards: cards,
+        selectedEvents: e.value,
+        total: heroes.data.total,
+        offset: "offset=0",
+      });
+    });
+  }
+
+  //->SEARCH
+  onSelectSearch(e) {
+    GetHeroes(
+      this.state.limit +
+        "&offset=0&orderBy=" +
+        this.state.orderBy +
+        "nameStartsWith=" +
+        e.value +
+        "&"
+    ).then((heroes) => {
+      const cards = this.GetCards(heroes.data.results);
+      this.setState({
+        cards: cards,
+        nameStartsWith: e.value,
+        offset: "offset=0",
+        total: heroes.data.total,
+        selectedEvents: []
+      });
+    });
+  }
+
+  onClear() {
+    GetHeroes(
+      this.state.limit + "&offset=0&orderBy=" + this.state.orderBy
+    ).then((heroes) => {
+      const cards = this.GetCards(heroes.data.results);
+      this.setState({
+        cards: cards,
+        nameStartsWith: "",
+        offset: "offset=0",
+        total: heroes.data.total,
+      });
+    });
+  }
+
+  suggestHeroes(e) {
+    let results = this.heroes.filter((hero) => {
+      return hero.toLowerCase().startsWith(e.query.toLowerCase());
+    });
+
+    this.setState({ heroesSuggestions: results });
   }
 
   onGetHeroesClick() {
@@ -129,29 +251,64 @@ export class Home extends Component {
         </Jumbotron>
         <Container className="p-4">
           <Row>
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>Search</Form.Label>
+                <AutoComplete
+                  className="d-block"
+                  inputClassName="w-100 autocomplete"
+                  value={this.state.hero}
+                  onChange={(e) => this.setState({ hero: e.value })}
+                  onSelect={(e) => this.onSelectSearch(e)}
+                  onClear={this.onClear}
+                  suggestions={this.state.heroesSuggestions}
+                  completeMethod={(e) => this.suggestHeroes(e)}
+                ></AutoComplete>
+              </Form.Group>
+            </Col>
+            <Col md={3}>
+              <Form.Group>
+                <Form.Label>Order by</Form.Label>
+                <Form.Control
+                  as="select"
+                  onChange={(e) => this.onChangeOrderSelect(e)}
+                >
+                  <option value={1}>Name A-Z</option>
+                  <option value={2}>Name Z-A</option>
+                  <option value={3}>Modified Ascendent</option>
+                  <option value={4}>Modified Descendant</option>
+                </Form.Control>
+              </Form.Group>
+            </Col>
+            <Col md={3}>
+              <Form.Group>
+                <Form.Label>Events</Form.Label>
+                <MultiSelect
+                  className="d-block multiselect"
+                  optionLabel="title"
+                  optionValue="id"
+                  value={this.state.selectedEvents}
+                  options={this.state.events}
+                  onChange={(e) => this.onChangeFilterEvents(e)}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>
             {this.state.cards}
 
             <Col xs={12}>
               <Paginator
                 first={this.state.first}
-                rows={36}
+                rows={24}
                 totalRecords={this.state.total}
                 onPageChange={(e) => this.onChangePagination(e)}
                 className="w-50 mx-auto"
               ></Paginator>
             </Col>
-
           </Row>
         </Container>
       </>
     );
   }
 }
-
-// <Pagination className="mx-auto" onClick={(e)=> this.onChangePagination(e)}>
-//               <Pagination.First />
-//               <Pagination.Prev />
-//               {this.state.pagination}
-//               <Pagination.Next />
-//               <Pagination.Last />
-//             </Pagination>

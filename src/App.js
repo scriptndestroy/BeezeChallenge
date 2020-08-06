@@ -12,8 +12,10 @@ export default class App extends Component {
     return (
       <Layout>
         <Route exact path="/" component={Home} />
+        
       </Layout>
     );
   }
 }
-// <Route exact path='/' component={Home} />
+// <Route path='/poliza/:id' render={(props) => <Poliza {...props} lang={this.state.language} userCountries={this.state.userCountries} />} />
+
