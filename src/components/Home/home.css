@@ -4,6 +4,19 @@
     }
 }
 
+@media (max-width: 540px){
+    .card-list-image {
+        height: 210px !important;
+    }
+}
+
+@media (min-width: 1200px){
+    .container-xxl {
+        max-width: 1300px;
+    }
+
+}
+
 .head {
     background-image: url(https://terrigen-cdn-dev.marvel.com/content/prod/1x/characters_art_mas_dsk_01.jpg);
 }
@@ -52,3 +65,7 @@
 .form-control:hover {
     border-color:  #8895a2 !important;    
 }
+
+
+
+ 

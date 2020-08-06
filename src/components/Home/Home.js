@@ -32,6 +32,7 @@ export class Home extends Component {
       orderBy: "name&",
       nameStartsWith: "",
       events: [],
+      selectedEvents: [],
       total: 0,
       pagination: [],
       cards: [],
@@ -73,9 +74,10 @@ export class Home extends Component {
     const cards = [];
     for (const key in data) {
       cards.push(
-        <Col key={key} xs={6} md={4} lg={3} className="mb-3 zoom">
+        <Col key={key} xs={6} md={4} lg={3} xl={2}  className="mb-3 zoom p-1 p-md-2">
           <Card>
             <Card.Img
+              className="card-list-image"
               variant="top"
               src={
                 data[key].thumbnail.path + "." + data[key].thumbnail.extension
@@ -249,7 +251,7 @@ export class Home extends Component {
             </Button>
           </Container>
         </Jumbotron>
-        <Container className="p-4">
+        <Container className="p-4 container-xxl">
           <Row>
             <Col md={6}>
               <Form.Group>
