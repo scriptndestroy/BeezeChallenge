@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import './navmenu.css';
+import "./navmenu.css";
 import {
   Nav,
   Navbar,
@@ -32,8 +32,8 @@ export class NavMenu extends Component {
   render() {
     return (
       <header className="sticky-top">
-        <Navbar sticky="top" expand="lg" variant='dark' className="bg-navbar">
-          <Navbar.Brand href="#home">
+        <Navbar sticky="top" expand="lg" variant="dark" className="bg-navbar">
+          <Link className="navbar-brand mx-auto" to="/">
             <svg width="130" height="52" xmlns="http://www.w3.org/2000/svg">
               <rect fill="#EC1D24" width="100%" height="100%"></rect>
               <path
@@ -46,38 +46,10 @@ export class NavMenu extends Component {
                 d="M31.5 48V4H21.291l-3.64 22.735L14.102 4H4v44h8V26.792L15.577 48h4.229l3.568-21.208V48z"
               ></path>
             </svg>
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="mr-auto">
-              <Nav.Link href="#home">Home</Nav.Link>
-              <Nav.Link href="#link">Link</Nav.Link>
-              <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">
-                  Another action
-                </NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">
-                  Something
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">
-                  Separated link
-                </NavDropdown.Item>
-              </NavDropdown>
-            </Nav>
-            <Form inline>
-              <FormControl
-                type="text"
-                placeholder="Search"
-                className="mr-sm-2"
-              />
-              <Button variant="outline-success">Search</Button>
-            </Form>
-          </Navbar.Collapse>
+          </Link>          
         </Navbar>
       </header>
     );
   }
 }
-// {<NavbarToggler onClick={this.toggleNavbar} className="mr-2" />}
+

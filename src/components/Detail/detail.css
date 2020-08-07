@@ -1,0 +1,9 @@
+
+.custom-tab {
+    background-color: rgba(0,0,0,.03);
+
+}
+
+.custom-card:hover {
+    background-color: #ca00000f;
+}

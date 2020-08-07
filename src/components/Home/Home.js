@@ -14,7 +14,6 @@ import {
   Card,
   Form,
 } from "react-bootstrap";
-// import Pagination from "react-bootstrap/Pagination";
 import "./home.css";
 import { GetHeroes, GetEvents } from "./functions";
 import { Link } from "react-router-dom";
@@ -47,7 +46,7 @@ export class Home extends Component {
     this.suggestHeroes = this.suggestHeroes.bind(this);
   }
 
-  componentDidMount() {    
+  componentDidMount() {
     this.loadData();
   }
 
@@ -74,7 +73,14 @@ export class Home extends Component {
     const cards = [];
     for (const key in data) {
       cards.push(
-        <Col key={key} xs={6} md={4} lg={3} xl={2}  className="mb-3 zoom p-1 p-md-2">
+        <Col
+          key={key}
+          xs={6}
+          md={4}
+          lg={3}
+          xl={2}
+          className="mb-3 zoom p-1 p-md-2"
+        >
           <Card>
             <Card.Img
               className="card-list-image"
@@ -82,13 +88,13 @@ export class Home extends Component {
               src={
                 data[key].thumbnail.path + "." + data[key].thumbnail.extension
               }
-              style={{ height: "250px", width: "100%", display: "block" }}
+              style={{ height: "210px", width: "100%", display: "block" }}
             />
             <Card.Body>
               <Card.Title>
                 {data[key].name}
                 <Link
-                  className="text-danger d-none"
+                  className="text-danger stretched-link"
                   to={"/Detail/" + data[key].id + ""}
                 ></Link>
               </Card.Title>
@@ -115,17 +121,26 @@ export class Home extends Component {
   onChangePagination(e) {
     const offset = "offset=" + (24 * e.page).toString();
     const orderBy = "orderBy=" + this.state.orderBy;
-    const query = this.state.limit + "&" + offset + "&" + orderBy + (this.state.selectedEvents.length > 0 ? "events=" + this.state.selectedEvents.toString() + "&" : ""); 
-    GetHeroes(query).then(
-      (heroes) => {
-        const cards = this.GetCards(heroes.data.results);
-        this.setState({
-          cards: cards,
-          first: e.first,
-          offset: offset,
-        });
-      }
-    );
+    const query =
+      this.state.limit +
+      "&" +
+      offset +
+      "&" +
+      orderBy +
+      (this.state.selectedEvents.length > 0
+        ? "events=" + this.state.selectedEvents.toString() + "&"
+        : "") +
+      (this.state.nameStartsWith !== ""
+        ? "nameStartsWith=" + this.state.nameStartsWith + "&"
+        : "");
+    GetHeroes(query).then((heroes) => {
+      const cards = this.GetCards(heroes.data.results);
+      this.setState({
+        cards: cards,
+        first: e.first,
+        offset: offset,
+      });
+    });
   }
 
   //->ORDER
@@ -146,7 +161,7 @@ export class Home extends Component {
         orderBy = "name&";
         break;
     }
-    
+
     const queryString =
       this.state.limit +
       "&" +
@@ -155,13 +170,16 @@ export class Home extends Component {
       orderBy +
       (this.state.nameStartsWith !== ""
         ? "nameStartsWith=" + this.state.nameStartsWith + "&"
-        : "") + (this.state.selectedEvents.length > 0 ? "events=" + this.state.selectedEvents.toString() : "");
+        : "") +
+      (this.state.selectedEvents.length > 0
+        ? "events=" + this.state.selectedEvents.toString()
+        : "");
 
     GetHeroes(queryString).then((heroes) => {
       const cards = this.GetCards(heroes.data.results);
       this.setState({
         cards: cards,
-        orderBy: orderBy        
+        orderBy: orderBy,
       });
     });
   }
@@ -170,7 +188,7 @@ export class Home extends Component {
   onChangeFilterEvents(e) {
     const queryString =
       this.state.limit +
-      "&offset=0&orderBy=" +      
+      "&offset=0&orderBy=" +
       this.state.orderBy +
       (this.state.nameStartsWith !== ""
         ? this.state.nameStartsWith + "&"
@@ -190,21 +208,22 @@ export class Home extends Component {
 
   //->SEARCH
   onSelectSearch(e) {
+    let name = e.value === undefined ? e.target.value : e.value;
     GetHeroes(
       this.state.limit +
         "&offset=0&orderBy=" +
         this.state.orderBy +
         "nameStartsWith=" +
-        e.value +
+        name +
         "&"
     ).then((heroes) => {
       const cards = this.GetCards(heroes.data.results);
       this.setState({
         cards: cards,
-        nameStartsWith: e.value,
+        nameStartsWith: name,
         offset: "offset=0",
         total: heroes.data.total,
-        selectedEvents: []
+        selectedEvents: [],
       });
     });
   }
@@ -231,6 +250,12 @@ export class Home extends Component {
     this.setState({ heroesSuggestions: results });
   }
 
+  onKeyPressAuto(e) {
+    if (e.key === "Enter" && e.target.value !== "") {
+      this.onSelectSearch(e);
+    }
+  }
+
   onGetHeroesClick() {
     GetHeroes();
   }
@@ -241,14 +266,11 @@ export class Home extends Component {
         <Jumbotron fluid className="head miniBackground mb-0">
           <Container className="text-white text-center">
             <h1>MARVEL API</h1>
-            <p>
-              This is a modified jumbotron that occupies the entire horizontal
-              space of its parent.
-            </p>
+            <p>Example for Beezy Challenge</p>
 
-            <Button variant="danger" onClick={this.onGetHeroesClick}>
-              Get heroes
-            </Button>
+            <a href="https://www.marvel.com/" className="btn btn-danger">
+              MARVEL
+            </a>
           </Container>
         </Jumbotron>
         <Container className="p-4 container-xxl">
@@ -263,6 +285,7 @@ export class Home extends Component {
                   onChange={(e) => this.setState({ hero: e.value })}
                   onSelect={(e) => this.onSelectSearch(e)}
                   onClear={this.onClear}
+                  onKeyUp={(e) => this.onKeyPressAuto(e)}
                   suggestions={this.state.heroesSuggestions}
                   completeMethod={(e) => this.suggestHeroes(e)}
                 ></AutoComplete>
@@ -298,14 +321,13 @@ export class Home extends Component {
           </Row>
           <Row>
             {this.state.cards}
-
             <Col xs={12}>
               <Paginator
                 first={this.state.first}
                 rows={24}
                 totalRecords={this.state.total}
                 onPageChange={(e) => this.onChangePagination(e)}
-                className="w-50 mx-auto"
+                className="mx-auto bg-transparent border-0"
               ></Paginator>
             </Col>
           </Row>
