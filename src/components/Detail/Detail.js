@@ -3,16 +3,14 @@ import "./detail.css";
 import { GetHero } from "../Home/functions";
 import {
   Jumbotron,
-  Container,
-  Button,
+  Container,  
   Col,
   Row,
   Card,
-  Nav,
+  
   Tab,
   Tabs,
 } from "react-bootstrap";
-import { Link } from "react-router-dom";
 
 export class Detail extends Component {
   static displayName = Detail.name;

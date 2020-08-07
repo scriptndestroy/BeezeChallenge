@@ -1,13 +1,6 @@
 import React, { Component } from "react";
 import "./navmenu.css";
-import {
-  Nav,
-  Navbar,
-  NavDropdown,
-  Form,
-  FormControl,
-  Button,
-} from "react-bootstrap";
+import { Navbar } from "react-bootstrap";
 import { Link } from "react-router-dom";
 // import './NavMenu.css';
 
